@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Remote Tivi</title>
+</head>
+<body>
+<canvas id="tiviCanvas" width="500" height="500" style="border:1px solid #d3d3d3"></canvas>
+<p></p>
+<button id="turnOff" onclick="remote.turnOff();">Turn OFF</button>
+<button id="turnOn" onclick="remote.changeChannel();">Turn ON</button>
+<button id="increaseVolume" onclick="remote.increaseVolume()">Increase Volume</button>
+<button id="decreaseVolume" onclick="remote.decreaseVolume()">Decrease Volume</button>
+<button id="channel1" onclick="remote.swap(this.id)">Channel1</button>
+<button id="channel2" onclick="remote.swap(this.id)">Channel2</button>
+<button id="channel3" onclick="remote.swap(this.id)">Channel3</button>
+<button id="channel4" onclick="remote.swap(this.id)">Channel4</button>
+
+<script>
+    const AUTUMN = "autumn";
+    const WINTER = "winter";
+    const SUMMER = "summer";
+    const SPRING = "spring";
+
+    function Tivi() {
+        let volume = 0;
+        let ctx = document.getElementById("tiviCanvas").getContext("2d");
+
+        this.source = AUTUMN;
+        this.channel = function () {
+            let channel = new Image();
+            channel.src = "Image/" + this.source + ".jpg";
+            channel.onload = function () {
+                ctx.drawImage(channel, 0, 0)
+            }
+        };
+
+        this.volume = function () {
+            return volume;
+        };
+
+        this.increaseVolume = function () {
+            volume++;
+            console.log(this.volume());
+        };
+
+        this.decreaseVolume = function () {
+            if (volume > 0) {
+                volume--;
+            }
+            console.log(this.volume())
+        }
+    }
+
+    function Remote() {
+        let tivi = new Tivi();
+
+        this.increaseVolume = function () {
+            return tivi.increaseVolume();
+        };
+
+        this.decreaseVolume = function () {
+            return tivi.decreaseVolume();
+        };
+
+        this.changeChannel = function () {
+            tivi.channel();
+        };
+        this.turnOff = function () {
+            let ctx = document.getElementById("tiviCanvas").getContext("2d");
+            ctx.fillRect(0, 0, 500, 500);
+        };
+
+        this.swap = function (id) {
+            let buttonChannel = document.getElementById(id);
+            switch (id) {
+                case "channel1":
+                    tivi.source = AUTUMN;
+                    tivi.channel();
+                    break;
+                case "channel2":
+                    tivi.source = WINTER;
+                    tivi.channel();
+                    break;
+                case "channel3":
+                    tivi.source = SUMMER;
+                    tivi.channel();
+                    break;
+                case "channel4":
+                    tivi.source = SPRING;
+                    tivi.channel();
+                    break;
+            }
+        }
+    }
+
+    let tivi = new Tivi();
+    let remote = new Remote();
+    tivi.channel();
+
+</script>
+</body>
+</html>
